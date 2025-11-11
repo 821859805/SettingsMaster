@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.k8sconfig.mapper.CustomConfigMapper">
+
+    <resultMap id="CustomConfigResultMap" type="com.example.k8sconfig.entity.CustomConfig">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="namespace" column="namespace" />
+        <result property="resourceType" column="resource_type" />
+        <result property="yamlContent" column="yaml_content" />
+        <result property="description" column="description" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, namespace, resource_type, yaml_content, description, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.example.k8sconfig.entity.CustomConfig" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO custom_config
+        (name, namespace, resource_type, yaml_content, description, created_at, updated_at)
+        VALUES
+        (#{name}, #{namespace}, #{resourceType}, #{yamlContent}, #{description}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.example.k8sconfig.entity.CustomConfig">
+        UPDATE custom_config
+        SET name = #{name},
+            namespace = #{namespace},
+            resource_type = #{resourceType},
+            yaml_content = #{yamlContent},
+            description = #{description},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM custom_config WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="long" resultMap="CustomConfigResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM custom_config
+        WHERE id = #{id}
+    </select>
+
+    <select id="search" parameterType="string" resultMap="CustomConfigResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM custom_config
+        <where>
+            <if test="keyword != null">
+                (name LIKE CONCAT('%', #{keyword}, '%')
+                    OR namespace LIKE CONCAT('%', #{keyword}, '%')
+                    OR resource_type LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY updated_at DESC
+    </select>
+
+</mapper>

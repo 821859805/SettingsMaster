@@ -1,0 +1,134 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: #f5f7fb;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background-color: #0f172a;
+  color: #fff;
+}
+
+.logo {
+  font-weight: 600;
+  font-size: 20px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav a {
+  margin-left: 24px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.nav a.active,
+.nav a:hover {
+  color: #fff;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px 32px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  background-color: #f1f5f9;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  background-color: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button.secondary {
+  background-color: #475569;
+}
+
+.button.danger {
+  background-color: #dc2626;
+}
+
+.button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  border: 1px solid #cbd5f5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.textarea {
+  min-height: 160px;
+  font-family: 'Fira Code', monospace;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row > div {
+  flex: 1;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.badge-green {
+  color: #15803d;
+}
+
+.badge-red {
+  color: #dc2626;
+}
