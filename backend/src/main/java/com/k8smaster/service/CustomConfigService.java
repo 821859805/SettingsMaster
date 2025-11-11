@@ -1,8 +1,8 @@
-package com.example.k8sconfig.service;
+package com.k8smaster.service;
 
-import com.example.k8sconfig.dto.CreateCustomConfigRequest;
-import com.example.k8sconfig.dto.CustomConfigResponse;
-import com.example.k8sconfig.dto.UpdateCustomConfigRequest;
+import com.k8smaster.domain.dto.CreateCustomConfigRequest;
+import com.k8smaster.domain.dto.CustomConfigResponse;
+import com.k8smaster.domain.dto.UpdateCustomConfigRequest;
 
 import java.util.List;
 

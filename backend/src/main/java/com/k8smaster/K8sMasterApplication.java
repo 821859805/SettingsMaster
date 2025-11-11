@@ -1,15 +1,17 @@
-package com.example.k8sconfig;
+package com.k8smaster;
 
-import com.example.k8sconfig.config.KubernetesClientProperties;
+import com.k8smaster.config.KubernetesClientProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.mybatis.spring.annotation.MapperScan;
 
 @SpringBootApplication
 @EnableConfigurationProperties(KubernetesClientProperties.class)
-public class K8sConfigManagerApplication {
+@MapperScan("com.k8smaster.mapper")
+public class K8sMasterApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(K8sConfigManagerApplication.class, args);
+        SpringApplication.run(K8sMasterApplication.class, args);
     }
 }

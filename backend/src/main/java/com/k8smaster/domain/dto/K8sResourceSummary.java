@@ -1,4 +1,4 @@
-package com.example.k8sconfig.dto;
+package com.k8smaster.domain.dto;
 
 public record K8sResourceSummary(
         String name,

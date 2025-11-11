@@ -11,9 +11,10 @@ spring:
     serialization:
       INDENT_OUTPUT: true
 
-mybatis:
-  type-aliases-package: com.example.k8sconfig.entity
-  mapper-locations: classpath*:mapper/*.xml
+mybatis-plus:
+  type-aliases-package: com.k8smaster.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
 
 kubernetes:
   client:

@@ -1,4 +1,4 @@
-package com.example.k8sconfig.config;
+package com.k8smaster.config;
 
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClient;

@@ -1,4 +1,4 @@
-package com.example.k8sconfig.dto;
+package com.k8smaster.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

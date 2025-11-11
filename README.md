@@ -1,6 +1,6 @@
 # Kubernetes 配置管理系统
 
-本项目提供一套前后端分离的 Kubernetes 配置管理解决方案，支持在线查看集群资源、创建/更新/删除工作负载，以及管理可复用的自定义 YAML 配置。后端基于 Spring Boot + MyBatis + MySQL，前端基于 React + TypeScript + Vite。
+本项目提供一套前后端分离的 Kubernetes 配置管理解决方案，支持在线查看集群资源、创建/更新/删除工作负载，以及管理可复用的自定义 YAML 配置。后端基于 Spring Boot + MyBatis-Plus + MySQL，前端基于 React + TypeScript + Vite。
 
 ## 功能概览
 
@@ -13,7 +13,7 @@
 ## 项目结构
 
 ```
-backend/   Spring Boot 服务，集成 MyBatis 与 Kubernetes Client
+backend/   Spring Boot 服务，集成 MyBatis-Plus 与 Kubernetes Client
 frontend/  React + TypeScript 管理控制台（Vite 构建）
 ```
 
@@ -63,6 +63,8 @@ Vite 已配置将 `/api` 前缀的请求代理到 `http://localhost:8080`。
 
 ## 常用 REST 接口
 
+所有接口统一返回 `Result<T>` 结构，包含 `code`、`message` 与 `data` 字段，`code=0` 表示成功。
+
 - `GET /api/k8s/namespaces/{namespace}/deployments`：列出 Deployment 摘要信息。
 - `GET /api/k8s/namespaces/{namespace}/pods`：列出 Pod 摘要。
 - `GET /api/k8s/namespaces/{namespace}/resources/{kind}/{name}`：获取资源 YAML。
@@ -76,6 +78,6 @@ Vite 已配置将 `/api` 前缀的请求代理到 `http://localhost:8080`。
 
 - 生产环境中建议结合 RBAC、审计日志等能力，限制对 Kubernetes 集群的操作范围。
 - 如需支持更多资源类型，可在 `KubernetesServiceImpl` 中扩展 `fetchResource` 的分支逻辑。
-- `frontend/src/pages` 和 `backend/src/main/resources/mapper` 内的示例可作为扩展新功能的参考。
+- `frontend/src/pages` 与 `backend/src/main/java/com/k8smaster/service` 内的逻辑可作为扩展新功能的参考。
 
 祝使用愉快！欢迎根据实际业务继续扩展。 

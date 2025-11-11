@@ -1,13 +1,10 @@
-package com.example.k8sconfig.service.impl;
+package com.k8smaster.service.impl;
 
-import com.example.k8sconfig.dto.K8sResourceSummary;
-import com.example.k8sconfig.service.KubernetesService;
-import io.fabric8.kubernetes.api.model.ConfigMap;
+import com.k8smaster.domain.dto.K8sResourceSummary;
+import com.k8smaster.service.KubernetesService;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.apps.StatefulSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.utils.Serialization;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.k8sconfig.config;
+package com.k8smaster.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

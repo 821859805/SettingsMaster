@@ -1,6 +1,6 @@
-package com.example.k8sconfig.service;
+package com.k8smaster.service;
 
-import com.example.k8sconfig.dto.K8sResourceSummary;
+import com.k8smaster.domain.dto.K8sResourceSummary;
 
 import java.util.List;
 

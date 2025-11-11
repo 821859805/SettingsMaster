@@ -1,18 +1,20 @@
-package com.example.k8sconfig.service.impl;
+package com.k8smaster.service.impl;
 
-import com.example.k8sconfig.dto.CreateCustomConfigRequest;
-import com.example.k8sconfig.dto.CustomConfigResponse;
-import com.example.k8sconfig.dto.UpdateCustomConfigRequest;
-import com.example.k8sconfig.entity.CustomConfig;
-import com.example.k8sconfig.mapper.CustomConfigMapper;
-import com.example.k8sconfig.service.CustomConfigService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.k8smaster.domain.dto.CreateCustomConfigRequest;
+import com.k8smaster.domain.dto.CustomConfigResponse;
+import com.k8smaster.domain.dto.UpdateCustomConfigRequest;
+import com.k8smaster.domain.entity.CustomConfig;
+import com.k8smaster.mapper.CustomConfigMapper;
+import com.k8smaster.service.CustomConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class CustomConfigServiceImpl implements CustomConfigService {
 
     @Override
     public void updateConfig(Long id, UpdateCustomConfigRequest request) {
-        CustomConfig config = mapper.findById(id)
+        CustomConfig config = Optional.ofNullable(mapper.selectById(id))
                 .orElseThrow(() -> new IllegalArgumentException("配置不存在: " + id));
         config.setName(request.name());
         config.setNamespace(request.namespace());
@@ -45,28 +47,35 @@ public class CustomConfigServiceImpl implements CustomConfigService {
         config.setYamlContent(request.yamlContent());
         config.setDescription(request.description());
         config.setUpdatedAt(LocalDateTime.now());
-        mapper.update(config);
+        mapper.updateById(config);
     }
 
     @Override
     public void deleteConfig(Long id) {
-        mapper.delete(id);
+        mapper.deleteById(id);
     }
 
     @Override
     public CustomConfigResponse getConfig(Long id) {
-        return mapper.findById(id)
-                .map(this::toResponse)
+        CustomConfig config = Optional.ofNullable(mapper.selectById(id))
                 .orElseThrow(() -> new IllegalArgumentException("配置不存在: " + id));
+        return toResponse(config);
     }
 
     @Override
     public List<CustomConfigResponse> listConfigs(String keyword) {
-        String normalized = StringUtils.hasText(keyword) ? keyword : null;
-        return mapper.search(normalized)
-                .stream()
+        LambdaQueryWrapper<CustomConfig> wrapper = Wrappers.lambdaQuery(CustomConfig.class)
+                .orderByDesc(CustomConfig::getUpdatedAt);
+        if (StringUtils.hasText(keyword)) {
+            wrapper.and(q -> q.like(CustomConfig::getName, keyword)
+                    .or()
+                    .like(CustomConfig::getNamespace, keyword)
+                    .or()
+                    .like(CustomConfig::getResourceType, keyword));
+        }
+        return mapper.selectList(wrapper).stream()
                 .map(this::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CustomConfigResponse toResponse(CustomConfig config) {
