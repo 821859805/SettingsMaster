@@ -1,7 +1,7 @@
 import type { UIEventHandler } from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchPods } from '../api/k8s';
+import { useMemo } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchPodsPaged } from '../api/k8s';
 import { useNamespaceStore } from '../store/namespaceStore';
 import type { K8sResourceSummary } from '../types/k8s';
 
@@ -14,30 +14,34 @@ interface ContainerDrawerProps {
 
 export const ContainerDrawer = ({ open, onClose }: ContainerDrawerProps) => {
   const { namespace } = useNamespaceStore();
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['pods-drawer', namespace],
-    queryFn: () => fetchPods(namespace),
-    enabled: open
-  });
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isRefetching } =
+    useInfiniteQuery({
+      queryKey: ['pods-drawer', namespace],
+      queryFn: ({ pageParam = 1 }) => fetchPodsPaged(namespace, pageParam, PAGE_SIZE),
+      getNextPageParam: (lastPage) => {
+        const totalPages = Math.ceil(lastPage.total / lastPage.pageSize);
+        return lastPage.page < totalPages ? lastPage.page + 1 : undefined;
+      },
+      enabled: open,
+      refetchOnReconnect: true,
+      refetchOnWindowFocus: false,
+      refetchOnMount: 'always'
+    });
 
-  useEffect(() => {
-    if (open) {
-      setVisibleCount(PAGE_SIZE);
-    }
-  }, [open]);
-
-  const items = data ?? [];
-  const visibleItems = useMemo(
-    () => items.slice(0, Math.min(visibleCount, items.length)),
-    [items, visibleCount]
+  const items = useMemo(
+    () => (data?.pages ? data.pages.flatMap((page) => page.items) : []),
+    [data]
   );
+  const total = data?.pages?.[0]?.total ?? 0;
 
   const handleScroll: UIEventHandler<HTMLDivElement> = (event) => {
+    if (!hasNextPage || isFetchingNextPage) {
+      return;
+    }
     const target = event.currentTarget;
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - 24) {
-      setVisibleCount((prev) => (prev >= items.length ? prev : Math.min(prev + PAGE_SIZE, items.length)));
+      fetchNextPage();
     }
   };
 
@@ -55,12 +59,13 @@ export const ContainerDrawer = ({ open, onClose }: ContainerDrawerProps) => {
           </button>
         </div>
         <div className="drawer-body" onScroll={handleScroll}>
-          {isLoading && <p>加载中...</p>}
+          {(isLoading || isRefetching) && <p>加载中...</p>}
           {error && <p className="badge-red">加载失败：{(error as Error).message}</p>}
-          {!isLoading && !error && visibleItems.length === 0 && <p>当前命名空间暂无容器。</p>}
+          {!isLoading && !isRefetching && !error && items.length === 0 && <p>当前命名空间暂无容器。</p>}
           {!isLoading &&
+            !isRefetching &&
             !error &&
-            visibleItems.map((item: K8sResourceSummary) => (
+            items.map((item: K8sResourceSummary) => (
               <div key={`${item.namespace}-${item.name}`} className="container-item">
                 <h4>{item.name}</h4>
                 <p>命名空间：{item.namespace}</p>
@@ -68,10 +73,11 @@ export const ContainerDrawer = ({ open, onClose }: ContainerDrawerProps) => {
                 <p>状态：{item.status}</p>
               </div>
             ))}
+          {isFetchingNextPage && <p>加载更多...</p>}
         </div>
         {items.length > 0 && (
           <div className="drawer-footer">
-            已加载 {visibleItems.length} / {items.length} 个容器
+            已加载 {items.length} / {total || items.length} 个容器
           </div>
         )}
       </aside>

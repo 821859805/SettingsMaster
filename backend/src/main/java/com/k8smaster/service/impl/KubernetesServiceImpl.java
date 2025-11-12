@@ -1,5 +1,6 @@
 package com.k8smaster.service.impl;
 
+import com.k8smaster.common.PagedResult;
 import com.k8smaster.domain.dto.K8sResourceSummary;
 import com.k8smaster.service.KubernetesService;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -35,6 +36,18 @@ public class KubernetesServiceImpl implements KubernetesService {
                 .list().getItems().stream()
                 .map(this::toSummary)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PagedResult<K8sResourceSummary> listPods(String namespace, int page, int pageSize) {
+        int currentPage = Math.max(page, 1);
+        int currentPageSize = Math.max(pageSize, 1);
+        List<K8sResourceSummary> allPods = listPods(namespace);
+        int total = allPods.size();
+        int fromIndex = Math.min((currentPage - 1) * currentPageSize, total);
+        int toIndex = Math.min(fromIndex + currentPageSize, total);
+        List<K8sResourceSummary> pageItems = fromIndex >= toIndex ? List.of() : allPods.subList(fromIndex, toIndex);
+        return new PagedResult<>(pageItems, total, currentPage, currentPageSize);
     }
 
     @Override

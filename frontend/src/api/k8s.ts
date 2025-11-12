@@ -1,5 +1,5 @@
 import { http } from './http';
-import type { Result } from '../types/common';
+import type { PagedResult, Result } from '../types/common';
 import type { DeployResourcePayload, K8sResourceSummary, UpdateResourcePayload } from '../types/k8s';
 
 export const fetchDeployments = async (namespace: string) => {
@@ -10,6 +10,13 @@ export const fetchDeployments = async (namespace: string) => {
 export const fetchPods = async (namespace: string) => {
   const { data } = await http.get<Result<K8sResourceSummary[]>>(`/k8s/namespaces/${namespace}/pods`);
   return data.data ?? [];
+};
+
+export const fetchPodsPaged = async (namespace: string, page: number, pageSize: number) => {
+  const { data } = await http.get<Result<PagedResult<K8sResourceSummary>>>(`/k8s/namespaces/${namespace}/pods/paged`, {
+    params: { page, pageSize }
+  });
+  return data.data!;
 };
 
 export const fetchResourceYaml = async (namespace: string, kind: string, name: string) => {

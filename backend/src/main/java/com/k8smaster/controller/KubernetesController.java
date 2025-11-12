@@ -1,5 +1,6 @@
 package com.k8smaster.controller;
 
+import com.k8smaster.common.PagedResult;
 import com.k8smaster.common.Result;
 import com.k8smaster.domain.dto.DeployResourceRequest;
 import com.k8smaster.domain.dto.K8sResourceSummary;
@@ -34,6 +35,13 @@ public class KubernetesController {
     @GetMapping("/namespaces/{namespace}/pods")
     public Result<List<K8sResourceSummary>> listPods(@PathVariable String namespace) {
         return Result.success(kubernetesService.listPods(namespace));
+    }
+
+    @GetMapping("/namespaces/{namespace}/pods/paged")
+    public Result<PagedResult<K8sResourceSummary>> listPodsPaged(@PathVariable String namespace,
+                                                                 @RequestParam(defaultValue = "1") int page,
+                                                                 @RequestParam(defaultValue = "20") int pageSize) {
+        return Result.success(kubernetesService.listPods(namespace, page, pageSize));
     }
 
     @GetMapping("/namespaces/{namespace}/resources/{kind}/{name}")
