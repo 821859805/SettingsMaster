@@ -39,6 +39,12 @@
   padding: 24px 32px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .card {
   background: #fff;
   border-radius: 12px;
@@ -79,6 +85,18 @@
 
 .button.secondary {
   background-color: #475569;
+}
+
+.button.outline {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+.button.outline:hover {
+  border-color: #fff;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .button.danger {
@@ -131,4 +149,73 @@
 
 .badge-red {
   color: #dc2626;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.35);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.drawer {
+  width: 360px;
+  max-width: 90%;
+  background: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -2px 0 12px rgba(15, 23, 42, 0.2);
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.drawer-body {
+  padding: 16px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.container-item {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 0;
+}
+
+.container-item:last-child {
+  border-bottom: none;
+}
+
+.container-item h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.container-item p {
+  margin: 4px 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.drawer-footer {
+  padding: 12px 24px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
 }
